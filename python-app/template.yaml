@@ -2,7 +2,7 @@ apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 # some metadata about the template itself
 metadata:
-  name: Python App Template
+  name: Python-App-Template
   title: Python App Template
   description: A template for creating a Python application with GitHub repository setup
 spec:

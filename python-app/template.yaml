@@ -1,23 +1,34 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
+# some metadata about the template itself
 metadata:
-  name: python-app-template
-  title: Python Application Template
-  description: A template for deploying a Python application
+  name: Python App Template
+  title: Python App Template
+  description: A template for creating a Python application with GitHub repository setup
 spec:
-  owner: development
+  owner: backstage/techdocs-core
   type: service
   parameters:
-    - title: Fill insome steps
+    - title: Define App Name/Version and Environment
       required: 
-        - component_id
+        - name
         - environment
       properties:
-        component_id:
-          title: Component name
+        name:
+          title: Name
           type: string
-          description: Provide a component (microservice) name
-          pattern: '^([a-zA-Z][a-zA-Z0-9-]*)(-[a-zA-Z0-9]+)*$'
+          description: Provide a name for the application
+          ui:autofocus: true
+          ui:options:
+            rows: 5
+        owner:
+          title: Who will be the owner of this component?
+          type: string
+          description: Owner of the component
+          ui:field: OwnerPicker
+          ui:options:
+            catalogFilter:
+              kind: Group
         environment:
           title: Environment
           type: string
@@ -26,6 +37,17 @@ spec:
             - dev
             - staging
             - prod
+    - title: Choose a location
+      required:
+        - repoUrl
+      properties:
+        repoUrl:
+          title: Repository Location
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
   steps:
     - id: fetch-base
       name: Fetch Base
@@ -33,28 +55,36 @@ spec:
       input:
         url: ./template
         values:
-          app_name: ${{parameters.component_id}}
-          app_env: ${{parameters.environment}}
+          name: ${{ parameters.name }}
+          owner: ${{ parameters.owner }}
+
+    - id: fetch-docs
+      name: Fetch Docs
+      action: fetch:plain
+      input:
+        targetPath: ./docs
+        url: https://github.com/gabe-certs/python-app/blob/main/docs
 
     - id: publish
       name: Publish
       action: publish:github
       input:
-        allowedHosts:
-          - github.com
-        description: This is ${{ parameters.component_id }}
-        repoUrl: github.com?owner=gabe-certs&repo=${{parameters.component_id}}
+        description: This is ${{ parameters.name }}
+        repoUrl: github.com?owner=gabe-certs&repo=${{ parameters.repoUrl }}
+        defaultBranch: 'main'
         protectDefaultBranch: false
-        repoVisibility: public
-
     - id: register
       name: Register
       action: catalog:register
       input:
         repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
+<<<<<<< HEAD
         catalogInfoPath: "/catalog-info.yaml"
 
   output:
     links:
       - title: Repository
         url: ${{ steps['publish'].output.remoteUrl }}
+=======
+        catalogInfoPath: '/catalog-info.yaml'
+>>>>>>> 56b9e2f (adding templates)

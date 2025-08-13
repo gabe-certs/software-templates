@@ -78,13 +78,9 @@ spec:
       action: catalog:register
       input:
         repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
-<<<<<<< HEAD
         catalogInfoPath: "/catalog-info.yaml"
 
   output:
     links:
       - title: Repository
         url: ${{ steps['publish'].output.remoteUrl }}
-=======
-        catalogInfoPath: '/catalog-info.yaml'
->>>>>>> 56b9e2f (adding templates)

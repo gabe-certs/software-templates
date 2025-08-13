@@ -60,7 +60,7 @@ spec:
       action: publish:github
       input:
         description: This is ${{ parameters.name }}
-        repoUrl: ${{ parameters.repoUrl }}
+        repoUrl: github.com?owner=gabe-certs&repo=${{ parameters.name }}
         defaultBranch: 'main'
         protectDefaultBranch: false
     - id: register
